@@ -5,19 +5,19 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extracted/CreamyKeyboard
     steps:
       - name: Scarica repository
         uses: actions/checkout@v4
+        with:
+          path: repo
 
       - name: Estrai ZIP
+        working-directory: ./
         run: |
-          unzip *.zip -d extracted
-          shopt -s dotglob
-          if [ $(ls -1 extracted | wc -l) -eq 1 ] && [ -d extracted/* ]; then
-            mv extracted/*/* .
-          else
-            mv extracted/* .
-          fi
+          unzip repo/*.zip -d extracted
 
       - name: Imposta Java 17
         uses: actions/setup-java@v4
@@ -35,4 +35,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CreamyKeyboard-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: extracted/CreamyKeyboard/app/build/outputs/apk/debug/*.apk
