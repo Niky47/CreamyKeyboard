@@ -28,7 +28,7 @@ jobs:
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: '8.13'
 
       - name: Compila Debug APK
         run: gradle assembleDebug
