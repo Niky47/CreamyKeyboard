@@ -1,0 +1,38 @@
+name: Compila CreamyKeyboard APK
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica repository
+        uses: actions/checkout@v4
+
+      - name: Estrai ZIP
+        run: |
+          unzip *.zip -d extracted
+          shopt -s dotglob
+          if [ $(ls -1 extracted | wc -l) -eq 1 ] && [ -d extracted/* ]; then
+            mv extracted/*/* .
+          else
+            mv extracted/* .
+          fi
+
+      - name: Imposta Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Dai permessi a Gradle
+        run: chmod +x gradlew
+
+      - name: Compila Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Carica APK generato
+        uses: actions/upload-artifact@v4
+        with:
+          name: CreamyKeyboard-debug
+          path: app/build/outputs/apk/debug/*.apk
